@@ -82,6 +82,7 @@ public class GamePanel extends JPanel {
 
         frames ++;
 
+        //FPS counter in paintComponetn method
         if(System.currentTimeMillis() - lastCheck >= 1000){
             lastCheck = System.currentTimeMillis();
             System.out.println("FPS :" + frames);
