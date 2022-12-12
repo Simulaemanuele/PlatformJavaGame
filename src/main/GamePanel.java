@@ -23,8 +23,8 @@ public class GamePanel extends JPanel {
     private float yDelta = 100;
 
     //private directions axis 
-    private float xDir = 0.03f;
-    private float yDir = 0.03f;
+    private float xDir = 1f;
+    private float yDir = 1f;
 
     //private frames variale
     private int frames = 0;
@@ -80,16 +80,8 @@ public class GamePanel extends JPanel {
         g.fillRect((int)xDelta, (int)yDelta, 200, 50);
         
 
-        frames ++;
-
-        //FPS counter in paintComponetn method
-        if(System.currentTimeMillis() - lastCheck >= 1000){
-            lastCheck = System.currentTimeMillis();
-            System.out.println("FPS :" + frames);
-            frames = 0;
-        }
-
-        repaint();
+        
+        
     }
 
     //updater method
