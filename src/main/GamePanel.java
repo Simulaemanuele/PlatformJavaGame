@@ -8,11 +8,15 @@ import inputs.MouseInputs;
 
 
 import java.awt.Graphics;
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+
+import static utilz.Constants.PlayerConstants.*;
+import static utilz.Constants.Directions.*;
 
 
 //GamePanel
@@ -27,7 +31,21 @@ public class GamePanel extends JPanel {
     private float yDelta = 100;
 
     //variable can store an img
-    private BufferedImage img, subImg;
+    private BufferedImage img;
+
+    //array bidimensional can store all the animations
+    private BufferedImage[][] animations;
+
+    //animation Tick, Index and Speed setted to 15
+    private int aniTick, aniIndex, aniSpeed = 15;
+
+    //variable can store IDLE constant
+    private int playerAction = IDLE;
+
+    //variable can store direction of the player
+    private int playerDirection = -1;
+
+    private boolean moving = false;
 
    
     //Game Panel Constructor
@@ -38,6 +56,9 @@ public class GamePanel extends JPanel {
 
         //import image method
         importImg();
+
+        //loadAnimation method
+        loadAnimation();
         
         //setPanelSize method
         setPanelSize();
@@ -49,6 +70,17 @@ public class GamePanel extends JPanel {
         addMouseMotionListener(mouseInputs);
     }
 
+    private void loadAnimation() {
+        animations = new BufferedImage[9][6];
+
+        for(int j = 0; j < animations.length; j++){
+            for(int i = 0; i < animations[j].length; i++){
+                animations[j][i] = img.getSubimage(i*64, j*40, 64, 40);
+            }
+        }
+        
+    }
+
     //method which will import an image asset
     private void importImg() {
         File is = new File("src\\res\\player_sprites.png");
@@ -57,8 +89,7 @@ public class GamePanel extends JPanel {
             img = ImageIO.read(is);
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
+        } 
         
     }
 
@@ -72,34 +103,98 @@ public class GamePanel extends JPanel {
 
 
     //changeDelta methods
-
-
-    public void changeXDelta(int value){
-        this.xDelta += value;
+    // public void changeXDelta(int value){
+    //     this.xDelta += value;
         
-    }
+    // }
 
-    public void changeYDelta(int value){
-        this.yDelta += value;
+    // public void changeYDelta(int value){
+    //     this.yDelta += value;
         
-    }
+    // }
 
     //This method set the position like deltas but it can use it by mouse inputs class
-    public void setRectPos(int x, int y){
-        this.xDelta = x;
-        this.yDelta = y;
+    // public void setRectPos(int x, int y){
+    //     this.xDelta = x;
+    //     this.yDelta = y;
         
+    // }
+
+    
+    //setMoving method it replace the methods change X and Y deltas and rect position
+    public void setDirection(int direction) {
+        this.playerDirection = direction;
+        moving = true;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
+    }
+
+    //update animation method Declaration
+    private void updateAnimationTick() {
+
+        aniTick++;
+        if(aniTick >= aniSpeed) {
+            aniTick = 0;
+            aniIndex++;
+            if(aniIndex >= GetSpriteAmount(playerAction)){
+                aniIndex = 0;
+            }
+        }
+
+    }
+
+    private void setAnimation() {
+
+        if(moving) {
+            playerAction = RUNNING;
+        } else {
+            playerAction = IDLE;
+        }
+
+    }
+
+    private void updatePosition() {
+
+        if(moving) {
+            switch(playerDirection) {
+                case LEFT:
+                xDelta -=5;
+                    break;
+                case UP:
+                yDelta -= 5;
+                    break;
+                case RIGHT:
+                xDelta += 5;
+                    break;
+                case DOWN:
+                yDelta += 5;
+                    break;
+            }
+        }
     }
 
     //public method for paint component which can draw taking Graphics by parameter
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        subImg = img.getSubimage(1*64, 8*40, 64, 40);
-        g.drawImage(subImg, (int)xDelta, (int)yDelta, 128, 80, null);
+        //update animation method
+        updateAnimationTick();
+
+        setAnimation();
+        updatePosition();
+        
+        g.drawImage(animations[playerAction][aniIndex], (int)xDelta, (int)yDelta, 256, 160, null);
         
         
     }
+
+    
+
+    
+
+    
 
     
 
