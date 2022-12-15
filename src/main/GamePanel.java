@@ -175,16 +175,19 @@ public class GamePanel extends JPanel {
         }
     }
 
-    //public method for paint component which can draw taking Graphics by parameter
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
+    //public update method
+    public void updateGame() {
         //update animation method
         updateAnimationTick();
 
         setAnimation();
         updatePosition();
-        
+    }
+
+    //public method for paint component which can draw taking Graphics by parameter
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
         g.drawImage(animations[playerAction][aniIndex], (int)xDelta, (int)yDelta, 256, 160, null);
         
         
