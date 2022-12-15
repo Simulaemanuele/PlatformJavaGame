@@ -1,5 +1,8 @@
 package main;
 
+import entities.Player;
+import java.awt.Graphics;
+
 //Game class it can take all the game components and render it
 public class Game implements Runnable{
 
@@ -15,9 +18,16 @@ public class Game implements Runnable{
     //Final setting fixed at 200 UPS (Update/tick per second)
     private final int UPS_SET = 200;
 
+
+    //player instance
+    private Player player;
+
     public Game(){
+        //initialize class method
+        initClasses();
+        
         //GamePanel instance
-        gamePanel = new GamePanel();
+        gamePanel = new GamePanel(this);
 
         //GameWindow instance that take gamePanel as parameter
         gameWindow = new GameWindow(gamePanel);
@@ -25,9 +35,15 @@ public class Game implements Runnable{
         //Method it can take the input focus
         gamePanel.requestFocus();
 
+        
+
         //Starting Game Loop
         startGameLoop();
         
+    }
+
+    private void initClasses() {
+        player = new Player(200, 200);
     }
 
     private void startGameLoop() {
@@ -36,7 +52,11 @@ public class Game implements Runnable{
     }
 
     public void update() {
-        gamePanel.updateGame();
+        player.update();
+    }
+
+    public void render(Graphics g) {
+        player.render(g);
     }
 
     //Overrride run method form Runnable interface
@@ -91,5 +111,9 @@ public class Game implements Runnable{
 
         }
         
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }
