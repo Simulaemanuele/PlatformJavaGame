@@ -30,7 +30,7 @@ public class Player extends Entity {
     //Instead of a variable use a bunch of booleans
     private boolean left, up, right, down;
 
-    private boolean moving = false;
+    private boolean moving = false, attacking = false;
 
     private float playerSpeed = 2.0f;
 
@@ -70,6 +70,7 @@ public class Player extends Entity {
                 aniIndex++;
                 if(aniIndex >= GetSpriteAmount(playerAction)){
                     aniIndex = 0;
+                    attacking = false;
                 }
             }
     
@@ -77,14 +78,28 @@ public class Player extends Entity {
     
         private void setAnimation() {
     
+            int startAni = playerAction;
             if(moving) {
                 playerAction = RUNNING;
             } else {
                 playerAction = IDLE;
             }
+
+            if(attacking) {
+                playerAction = ATTACK_1;
+            }
+
+            if(startAni != playerAction){
+                resetAniTick();
+            }
     
         }
     
+        private void resetAniTick() {
+            aniTick = 0;
+            aniIndex = 0;
+        }
+
         private void updatePosition() {
 
             moving = false;
@@ -125,6 +140,17 @@ public class Player extends Entity {
         } 
 
         
+    }
+
+    public void resetDirBooleans(){
+        left = false;
+        right = false;
+        up = false;
+        down = false;
+    }
+
+    public void setAttacking(boolean attacking) {
+        this.attacking = attacking;
     }
 
     public boolean isLeft() {
