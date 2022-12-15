@@ -8,7 +8,6 @@ import java.awt.Graphics;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.awt.image.BufferedImage;
 
 import static utilz.Constants.PlayerConstants.*;
@@ -26,9 +25,14 @@ public class Player extends Entity {
     private int playerAction = IDLE;
 
     //variable can store direction of the player
-    private int playerDirection = -1;
+    // private int playerDirection = -1;
+
+    //Instead of a variable use a bunch of booleans
+    private boolean left, up, right, down;
 
     private boolean moving = false;
+
+    private float playerSpeed = 2.0f;
 
     public Player(float x, float y) {
         super(x, y);
@@ -37,12 +41,10 @@ public class Player extends Entity {
     }
     
     public void update() {
-
+        updatePosition();
         //update animation method
         updateAnimationTick();
-
         setAnimation();
-        updatePosition();
     }
 
     public void render(Graphics g) {
@@ -50,14 +52,14 @@ public class Player extends Entity {
     }
 
         //setMoving method it replace the methods change X and Y deltas and rect position
-        public void setDirection(int direction) {
-            this.playerDirection = direction;
-            moving = true;
-        }
+        // public void setDirection(int direction) {
+        //     this.playerDirection = direction;
+        //     moving = true;
+        // }
     
-        public void setMoving(boolean moving) {
-            this.moving = moving;
-        }
+        // public void setMoving(boolean moving) {
+        //     this.moving = moving;
+        // }
     
         //update animation method Declaration
         private void updateAnimationTick() {
@@ -84,22 +86,23 @@ public class Player extends Entity {
         }
     
         private void updatePosition() {
+
+            moving = false;
     
-            if(moving) {
-                switch(playerDirection) {
-                    case LEFT:
-                    x -=5;
-                        break;
-                    case UP:
-                    y -= 5;
-                        break;
-                    case RIGHT:
-                    x += 5;
-                        break;
-                    case DOWN:
-                    y += 5;
-                        break;
-                }
+            if(left && !right) {
+                x -= playerSpeed;
+                moving = true;
+            } else if (right && !left){
+                x += playerSpeed;
+                moving = true;
+            }
+
+            if(up && !down) {
+                y -= playerSpeed;
+                moving = true;
+            } else if(down && !up) {
+                y += playerSpeed;
+                moving = true;
             }
         }
 
@@ -122,6 +125,39 @@ public class Player extends Entity {
         } 
 
         
-        
     }
+
+    public boolean isLeft() {
+        return left;
+    }
+
+    public void setLeft(boolean left) {
+        this.left = left;
+    }
+
+    public boolean isUp() {
+        return up;
+    }
+
+    public void setUp(boolean up) {
+        this.up = up;
+    }
+
+    public boolean isRight() {
+        return right;
+    }
+
+    public void setRight(boolean right) {
+        this.right = right;
+    }
+
+    public boolean isDown() {
+        return down;
+    }
+
+    public void setDown(boolean down) {
+        this.down = down;
+    }
+
+    
 }
