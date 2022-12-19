@@ -1,17 +1,12 @@
 package entities;
 
-import javax.imageio.ImageIO;
-
-
+import utilz.LoadSave;
 
 import java.awt.Graphics;
 
-import java.io.File;
-import java.io.IOException;
 import java.awt.image.BufferedImage;
 
 import static utilz.Constants.PlayerConstants.*;
-import static utilz.Constants.Directions.*;
 
 public class Player extends Entity {
 
@@ -122,11 +117,7 @@ public class Player extends Entity {
         }
 
     private void loadAnimation() {
-
-        File is = new File("src\\res\\player_sprites.png");
-
-        try {
-            BufferedImage img = ImageIO.read(is);
+            BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
 
             animations = new BufferedImage[9][6];
 
@@ -135,12 +126,8 @@ public class Player extends Entity {
                 animations[j][i] = img.getSubimage(i*64, j*40, 64, 40);
             }
         }
-        } catch (IOException e) {
-            e.printStackTrace();
         } 
-
         
-    }
 
     public void resetDirBooleans(){
         left = false;
